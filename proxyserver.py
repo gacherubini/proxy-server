@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 lock = threading.Lock()
 
-PROXY_FILE = "proxy.txt"
+PROXY_FILE = "proxiesteste.txt"
 
 def ler_proxies():
     """Lê todos os proxies do arquivo, mesmo que estejam em uma única linha."""
@@ -38,9 +38,32 @@ def add_proxy():
         return jsonify({"error": "No proxies provided"}), 400
 
     proxies = ler_proxies()
-    proxies.extend(new_proxies)
-    salvar_proxies(proxies)
-    return jsonify({"message": "Proxies added successfully"})
+    proxies_set = set(proxies)  # Converte a lista de proxies existentes para um conjunto
+    new_proxies_set = set(new_proxies)  # Converte a lista de novos proxies para um conjunto
+
+    unique_proxies = new_proxies_set - proxies_set
+    proxies_set.update(unique_proxies)
+
+    salvar_proxies(list(proxies_set))
+
+    return jsonify({
+        "message": "Proxies added successfully",
+        "added_proxies": list(unique_proxies)
+    })
+
+@app.route("/check_duplicates", methods=["GET"])
+def check_duplicates():
+    proxies = ler_proxies()
+    total_proxies = len(proxies)
+    unique_proxies = len(set(proxies))
+    duplicates = total_proxies - unique_proxies
+
+    return jsonify({
+        "total_proxies": total_proxies,
+        "unique_proxies": unique_proxies,
+        "duplicate_count": duplicates
+    })
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
