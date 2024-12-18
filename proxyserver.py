@@ -7,6 +7,14 @@ lock = threading.Lock()
 
 PROXY_FILE = "proxy.txt"
 
+@app.route("/delete_all_proxies", methods=["DELETE"])
+def delete_all_proxies():
+    """Apaga todos os proxies do arquivo de texto."""
+    with lock:
+        with open(PROXY_FILE, "w") as file:
+            file.write("")
+    return jsonify({"message": "All proxies deleted successfully"}), 200
+
 def ler_proxies():
     """Lê todos os proxies do arquivo, mesmo que estejam em uma única linha."""
     with lock:
