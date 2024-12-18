@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 lock = threading.Lock()
 
-PROXY_FILE = "proxiesteste.txt"
+PROXY_FILE = "proxy.txt"
 
 def ler_proxies():
     """Lê todos os proxies do arquivo, mesmo que estejam em uma única linha."""
