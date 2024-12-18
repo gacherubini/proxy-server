@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 import threading
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 lock = threading.Lock()
 
@@ -42,5 +42,5 @@ def add_proxy():
     salvar_proxies(proxies)
     return jsonify({"message": "Proxies added successfully"})
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
